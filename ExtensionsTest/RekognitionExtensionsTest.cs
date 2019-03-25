@@ -63,5 +63,23 @@ namespace ExtensionsTest
             Assert.IsTrue(faceLandmarks[0].Jawline.ContainsKey(Landmarks.MID_JAWLINE_RIGHT));
             Assert.IsTrue(faceLandmarks[0].Jawline.ContainsKey(Landmarks.CHIN_BOTTOM));
         }
+
+        /// <summary>
+        /// 解析情報テスト002
+        /// </summary>
+        [TestMethod]
+        public void AnalyzerTest002()
+        {
+            Dictionary<ValueDto, List<ValueDto>> textRelationships = Analyzer.AnalyzeDetectText(@"C:\work\cccc.txt");
+
+            // キー情報が存在しているか
+            Assert.IsTrue(textRelationships.Keys.Count > 0);
+
+            foreach(List<ValueDto> value in textRelationships.Values)
+            {
+                // 値情報が存在しているか
+                Assert.IsTrue(value.Count > 0);
+            }
+        }
     }
 }

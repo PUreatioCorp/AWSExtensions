@@ -44,8 +44,10 @@
   <ItemGroup>
     <Compile Include="Analyzer.cs" />
     <Compile Include="Const\JsonKeys.cs" />
+    <Compile Include="Const\JsonValues.cs" />
     <Compile Include="Const\Landmarks.cs" />
     <Compile Include="Dto\FaceLandmark.cs" />
+    <Compile Include="Dto\ValueDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

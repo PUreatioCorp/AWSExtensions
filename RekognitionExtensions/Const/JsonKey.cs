@@ -9,23 +9,18 @@ namespace RekognitionExtensions.Const
     /// <summary>
     /// JSONキー
     /// </summary>
-    public class JsonKeys
+    public class JsonKey
     {
-        // 汎用キ―
-        public const string TYPE = "Type";
-
         // 座標情報までのキー
         public const string FACE_DETAILS = "FaceDetails";
         public const string LANDMARKS = "Landmarks";
 
         // 座標情報キー
-        public const string X = "X";
-        public const string Y = "Y";
+        public const string LANDMARKS_TYPE = "Type";
+        public const string LANDMARKS_X = "X";
+        public const string LANDMARKS_Y = "Y";
 
         // テキスト検出キー
         public const string TEXT_DETECTIONS = "TextDetections";
-        public const string ID = "Id";
-        public const string PARENT_ID = "ParentId";
-        public const string DETECTED_TEXT = "DetectedText";
     }
 }

@@ -9,7 +9,7 @@ namespace TextractExtensions.Const
     /// <summary>
     /// JSONキー
     /// </summary>
-    class JsonKey
+    class JsonKeys
     {
         // JSONキー情報
         public const string BLOCKS = "Blocks";

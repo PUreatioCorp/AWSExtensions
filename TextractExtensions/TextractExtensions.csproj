@@ -42,8 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analyzer.cs" />
-    <Compile Include="Const\JsonKey.cs" />
-    <Compile Include="Const\JsonValue.cs" />
+    <Compile Include="Const\JsonKeys.cs" />
+    <Compile Include="Const\JsonValues.cs" />
     <Compile Include="Dto\ValueDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

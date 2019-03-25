@@ -18,6 +18,25 @@ namespace RekognitionExtensions
     public class Analyzer
     {
         /// <summary>
+        /// detect-textコマンドの結果を解析し、検出した文章、言葉の親子関係を取得する
+        /// </summary>
+        /// <param name="jsonFilePath">JSONファイルパス</param>
+        /// <returns>文章、言葉の親子関係</returns>
+        public static Dictionary<ValueDto, List<ValueDto>> AnalyzeDetectText(string jsonFilePath)
+        {
+            // テキスト検出の結果をDeserialize
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            Dictionary<string, object> detectTextResponse =
+                serializer.Deserialize<Dictionary<string, object>>(File.ReadAllText(jsonFilePath));
+
+            ArrayList textDetections = detectTextResponse[JsonKeys.TEXT_DETECTIONS] as ArrayList;
+            // テキストの紐付けを取得する。
+            Dictionary<ValueDto, List<ValueDto>> textRelationships = GetTextRelationships(textDetections);
+
+            return textRelationships;
+        }
+
+        /// <summary>
         /// detect-facesコマンドの結果を解析し、顔の座標情報を取得する
         /// </summary>
         /// <param name="jsonFilePath">JSONファイルパス</param>
@@ -48,6 +67,48 @@ namespace RekognitionExtensions
         }
 
         /// <summary>
+        /// 文章、言葉の親子関係を取得する
+        /// </summary>
+        /// <param name="textDetections">検出テキスト情報</param>
+        /// <returns>文章、言葉の親子関係</returns>
+        private static Dictionary<ValueDto, List<ValueDto>> GetTextRelationships(ArrayList textDetections)
+        {
+            // LINEとWORDの紐付けを設定
+            Dictionary<ValueDto, List<ValueDto>> textRelationships = new Dictionary<ValueDto, List<ValueDto>>();
+
+            foreach (Dictionary<string, object> detectionsValue in textDetections)
+            {
+                string type = detectionsValue[JsonKeys.TYPE] as string;
+                string id = detectionsValue[JsonKeys.ID].ToString();
+                string detectedText = detectionsValue[JsonKeys.DETECTED_TEXT] as string;
+                ValueDto valueDto = new ValueDto() { ID = id, Text = detectedText };
+
+                // LINEの場合
+                if (JsonValues.TYPE_LINE == type)
+                {
+                    // LINE情報の設定のみを行う。
+                    textRelationships.Add(valueDto, new List<ValueDto>());
+                }
+                // WORDの場合
+                else if (JsonValues.TYPE_WORD == type)
+                {
+                    string parentId = detectionsValue[JsonKeys.PARENT_ID].ToString();
+                    // WORD情報の紐付け設定を行う。
+                    foreach (KeyValuePair<ValueDto, List<ValueDto>> relationshipsValue in textRelationships)
+                    {
+                        if (relationshipsValue.Key.ID == parentId)
+                        {
+                            relationshipsValue.Value.Add(valueDto);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return textRelationships;
+        }
+
+        /// <summary>
         /// 顔の座標情報を取得する
         /// </summary>
         /// <param name="landmarks">座標情報</param>
@@ -65,16 +126,16 @@ namespace RekognitionExtensions
                 Jawline = new Dictionary<string, PointF>()
             };
 
-            foreach (Dictionary<string, object> landMarksValue in landmarks)
+            foreach (Dictionary<string, object> landmarksValue in landmarks)
             {
                 // 座標情報を作成する。
                 PointF point = new PointF()
                 {
-                    X = float.Parse(landMarksValue[JsonKeys.LANDMARKS_X].ToString()),
-                    Y = float.Parse(landMarksValue[JsonKeys.LANDMARKS_Y].ToString())
+                    X = float.Parse(landmarksValue[JsonKeys.X].ToString()),
+                    Y = float.Parse(landmarksValue[JsonKeys.Y].ToString())
                 };
 
-                string type = landMarksValue[JsonKeys.LANDMARKS_TYPE] as string;
+                string type = landmarksValue[JsonKeys.TYPE] as string;
                 // 設定する座標を決定する。
                 switch (type)
                 {

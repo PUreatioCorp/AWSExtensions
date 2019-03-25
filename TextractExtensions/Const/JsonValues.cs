@@ -9,7 +9,7 @@ namespace TextractExtensions.Const
     /// <summary>
     /// JSONの値
     /// </summary>
-    public class JsonValue
+    public class JsonValues
     {
         // BlockType
         public const string BLOCK_TYPE_PAGE = "PAGE";

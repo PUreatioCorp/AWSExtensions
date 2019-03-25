@@ -28,7 +28,7 @@ namespace TextractExtensions
             Dictionary<string, object> detectTextResponse =
                 serializer.Deserialize<Dictionary<string, object>>(File.ReadAllText(jsonFilePath));
 
-            ArrayList blocks = detectTextResponse[JsonKey.BLOCKS] as ArrayList;
+            ArrayList blocks = detectTextResponse[JsonKeys.BLOCKS] as ArrayList;
             // 紐付けを取得する。
             Dictionary<string, Dictionary<ValueDto, List<ValueDto>>> textRelationships = GetTextRelationships(blocks);
 
@@ -51,32 +51,32 @@ namespace TextractExtensions
             // blocksをループ
             foreach (Dictionary<string, object> blocksValue in blocks)
             {
-                string blockType = blocksValue[JsonKey.BLOCK_TYPE] as string;
-                string id = blocksValue[JsonKey.ID] as string;
+                string blockType = blocksValue[JsonKeys.BLOCK_TYPE] as string;
+                string id = blocksValue[JsonKeys.ID] as string;
 
                 // Relationshipsが存在する場合、RelationshipsのDictionaryに格納する。
-                if (blocksValue.ContainsKey(JsonKey.RELATIONSHIPS))
+                if (blocksValue.ContainsKey(JsonKeys.RELATIONSHIPS))
                 {
-                    ArrayList relationships = blocksValue[JsonKey.RELATIONSHIPS] as ArrayList;
-                    if (JsonValue.BLOCK_TYPE_PAGE == blockType)
+                    ArrayList relationships = blocksValue[JsonKeys.RELATIONSHIPS] as ArrayList;
+                    if (JsonValues.BLOCK_TYPE_PAGE == blockType)
                     {
                         SetRelationships(ref pageRelationships, relationships, id);
                     }
-                    else if (JsonValue.BLOCK_TYPE_LINE == blockType)
+                    else if (JsonValues.BLOCK_TYPE_LINE == blockType)
                     {
                         SetRelationships(ref lineRelationships, relationships, id);
                     }
                 }
 
                 // Pageの場合、文字列の紐付けは存在しないので、以降の処理はなし。
-                if (JsonValue.BLOCK_TYPE_PAGE == blockType)
+                if (JsonValues.BLOCK_TYPE_PAGE == blockType)
                 {
                     // 結果Dictionaryのインスタンスのみ設定しておく。
                     textRelationships.Add(id, new Dictionary<ValueDto, List<ValueDto>>());
                     continue;
                 }
 
-                string text = blocksValue[JsonKey.TEXT] as string;
+                string text = blocksValue[JsonKeys.TEXT] as string;
                 ValueDto valueDto = new ValueDto() { ID = id, Text = text };
                 // Relationshipsから紐付け元を特定し、結果に設定する。
                 SetTextRelationships(ref textRelationships, pageRelationships, lineRelationships, valueDto, blockType);
@@ -95,15 +95,15 @@ namespace TextractExtensions
         {
             foreach (Dictionary<string, object> relationshipsValue in relationships)
             {
-                string type = relationshipsValue[JsonKey.TYPE] as string;
+                string type = relationshipsValue[JsonKeys.TYPE] as string;
                 // TypeがCHILDではない場合、何もしない。
-                if (JsonValue.TYPE_CHILD != type)
+                if (JsonValues.TYPE_CHILD != type)
                 {
                     continue;
                 }
 
                 // Relationshipsを設定する。
-                ArrayList relationshipsIds = relationshipsValue[JsonKey.IDS] as ArrayList;
+                ArrayList relationshipsIds = relationshipsValue[JsonKeys.IDS] as ArrayList;
                 List<string> tempIds = null;
                 if (relationshipsDic.ContainsKey(id))
                 {
@@ -130,7 +130,7 @@ namespace TextractExtensions
             Dictionary<string, List<string>> pageRelationships, Dictionary<string, List<string>> lineRelationships, ValueDto valueDto, string blockType)
         {
             // LINEの場合
-            if (JsonValue.BLOCK_TYPE_LINE == blockType)
+            if (JsonValues.BLOCK_TYPE_LINE == blockType)
             {
                 // PAGEのIDを特定する。
                 string pageId = GetSourceID(pageRelationships, valueDto.ID);
@@ -140,7 +140,7 @@ namespace TextractExtensions
                 lineTextRelationships.Add(valueDto, new List<ValueDto>());
             }
             // WORDの場合
-            else if (JsonValue.BLOCK_TYPE_WORD == blockType)
+            else if (JsonValues.BLOCK_TYPE_WORD == blockType)
             {
                 // LINEのIDを特定する。
                 string lineId = GetSourceID(lineRelationships, valueDto.ID);
