@@ -19,3 +19,7 @@ Please refer to the following site for face contour information.
 Implements the following features.
 * Acquires the parent-child relationship of the detected text from the result of the detect-document-text command.
   * ```Analyzer#AnalyzeDetectDocumentText(string)```
+
+## License
+MIT<br>
+https://ja.wikipedia.org/wiki/MIT_License
