@@ -1,0 +1,9 @@
+/.vs/
+/packages/
+/ExtensionsTest/bin/
+/ExtensionsTest/obj/
+/RekognitionExtensions/bin/
+/RekognitionExtensions/obj/
+/TextractExtensions/bin/
+/TextractExtensions/obj/
+/TestResults/
